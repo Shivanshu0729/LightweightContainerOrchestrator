@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    color: #f8efe4;
+    background: #17121d;
+    font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  }
+
+  body {
+    @apply text-stone-100 antialiased;
+    min-height: 100vh;
+    margin: 0;
+    background:
+      radial-gradient(circle at 78% 2%, rgba(191, 103, 73, 0.2), transparent 30rem),
+      linear-gradient(135deg, #17121d 0%, #211727 52%, #120f17 100%);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #17121d;
+}
+::-webkit-scrollbar-thumb {
+  background: #6f4a4a;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c47a58;
+}
