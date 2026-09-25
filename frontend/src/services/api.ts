@@ -9,6 +9,27 @@ import type {
 
 const BASE_URL = import.meta.env.VITE_API_URL || '';
 
+function getErrorMessage(error: unknown, fallback: string): string {
+  if (typeof error === 'string') return error;
+  if (Array.isArray(error)) {
+    return error
+      .map((item) => {
+        if (typeof item === 'string') return item;
+        if (item && typeof item === 'object' && 'msg' in item) {
+          const message = String(item.msg);
+          const location = 'loc' in item && Array.isArray(item.loc) ? item.loc.join('.') : '';
+          return location ? `${location}: ${message}` : message;
+        }
+        return JSON.stringify(item);
+      })
+      .join('; ');
+  }
+  if (error && typeof error === 'object' && 'message' in error) {
+    return String(error.message);
+  }
+  return fallback;
+}
+
 async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = `${BASE_URL}${endpoint}`;
   const response = await fetch(url, {
@@ -23,7 +44,7 @@ async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
     let errorMsg = `HTTP Error ${response.status}`;
     try {
       const err = await response.json();
-      errorMsg = err.detail || err.message || errorMsg;
+      errorMsg = getErrorMessage(err.detail ?? err.message, errorMsg);
     } catch {
     }
     throw new Error(errorMsg);
